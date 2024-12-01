@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-
-import { TTabMode } from '@utils-types';
+import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { useSelector } from '../../services/store';
+import { selectIngredients } from '../ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
+  const ingredients: TIngredient[] = useSelector(selectIngredients);
   /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const buns = ingredients.filter((item) => item.type === 'bun');
+  const mains = ingredients.filter((item) => item.type === 'main');
+  const sauces = ingredients.filter((item) => item.type === 'sauce');
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -38,16 +40,23 @@ export const BurgerIngredients: FC = () => {
   }, [inViewBuns, inViewFilling, inViewSauces]);
 
   const onTabClick = (tab: string) => {
-    setCurrentTab(tab as TTabMode);
-    if (tab === 'bun')
-      titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'main')
-      titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'sauce')
-      titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+    // Приводим string к TTabMode
+    setCurrentTab(tab as TTabMode); // Приводим строку к TTabMode
 
-  return null;
+    switch (tab) {
+      case 'bun':
+        titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      case 'main':
+        titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      case 'sauce':
+        titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <BurgerIngredientsUI
@@ -61,7 +70,7 @@ export const BurgerIngredients: FC = () => {
       bunsRef={bunsRef}
       mainsRef={mainsRef}
       saucesRef={saucesRef}
-      onTabClick={onTabClick}
+      onTabClick={onTabClick} // Передаем функцию как есть
     />
   );
 };

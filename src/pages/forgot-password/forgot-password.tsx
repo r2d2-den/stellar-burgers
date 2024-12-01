@@ -12,14 +12,17 @@ export const ForgotPassword: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    setError(null);
-    forgotPasswordApi({ email })
-      .then(() => {
-        localStorage.setItem('resetPassword', 'true');
-        navigate('/reset-password', { replace: true });
-      })
-      .catch((err) => setError(err));
+    if (email) {
+      setError(null);
+      forgotPasswordApi({ email })
+        .then(() => {
+          localStorage.setItem('resetPassword', 'true');
+          navigate('/reset-password', { replace: true });
+        })
+        .catch((err) => setError(err));
+    } else {
+      setError({ name: '', message: 'Не введен Email' });
+    }
   };
 
   return (
