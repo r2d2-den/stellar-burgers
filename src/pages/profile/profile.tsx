@@ -1,12 +1,13 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import {
-  selectUserRequestStatus,
-  selectCurrentUser,
-  updateUserThunk
-} from '../../components/authorizationSlice';
+
 import { Preloader } from '@ui';
+import {
+  selectCurrentUser,
+  selectUserRequestStatus,
+  updateUserThunk
+} from '../../services/slices/authorizationSlice';
 
 export const Profile: FC = () => {
   const user = useSelector(selectCurrentUser);

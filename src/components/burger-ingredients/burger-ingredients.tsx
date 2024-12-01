@@ -3,11 +3,10 @@ import { useInView } from 'react-intersection-observer';
 import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from '../../services/store';
-import { selectIngredients } from '../ingredientsSlice';
+import { selectIngredients } from '../../services/slices/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
   const ingredients: TIngredient[] = useSelector(selectIngredients);
-  /** TODO: взять переменные из стора */
   const buns = ingredients.filter((item) => item.type === 'bun');
   const mains = ingredients.filter((item) => item.type === 'main');
   const sauces = ingredients.filter((item) => item.type === 'sauce');
@@ -40,8 +39,7 @@ export const BurgerIngredients: FC = () => {
   }, [inViewBuns, inViewFilling, inViewSauces]);
 
   const onTabClick = (tab: string) => {
-    // Приводим string к TTabMode
-    setCurrentTab(tab as TTabMode); // Приводим строку к TTabMode
+    setCurrentTab(tab as TTabMode);
 
     switch (tab) {
       case 'bun':
@@ -70,7 +68,7 @@ export const BurgerIngredients: FC = () => {
       bunsRef={bunsRef}
       mainsRef={mainsRef}
       saucesRef={saucesRef}
-      onTabClick={onTabClick} // Передаем функцию как есть
+      onTabClick={onTabClick}
     />
   );
 };

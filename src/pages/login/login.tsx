@@ -1,14 +1,15 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import {
-  selectIsAuthenticated,
-  selectUserError,
-  selectUserRequestStatus,
-  loginUserThunk
-} from '../../components/authorizationSlice';
+
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Preloader } from '@ui';
+import {
+  loginUserThunk,
+  selectIsAuthenticated,
+  selectUserError,
+  selectUserRequestStatus
+} from '../../services/slices/authorizationSlice';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');

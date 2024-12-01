@@ -4,7 +4,7 @@ import {
   SerializedError
 } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { RootState } from '../services/store';
+
 import {
   getOrderByNumberApi,
   getOrdersApi,
@@ -12,6 +12,7 @@ import {
   TNewOrderResponse,
   TOrderResponse
 } from '@api';
+import { RootState } from '../store';
 
 export type TOrderState = {
   ordersHistory: TOrder[];

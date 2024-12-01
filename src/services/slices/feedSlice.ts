@@ -1,10 +1,10 @@
-import { RootState } from 'src/services/store';
-import { TFeedsResponse, getFeedsApi } from '../utils/burger-api';
+import { RootState } from '../../services/store';
 import {
   createAsyncThunk,
   createSlice,
   SerializedError
 } from '@reduxjs/toolkit';
+import { getFeedsApi, TFeedsResponse } from '@api';
 
 type TFeedState = {
   feedData: TFeedsResponse;

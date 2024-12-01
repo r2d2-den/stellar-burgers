@@ -1,4 +1,10 @@
 import {
+  createAsyncThunk,
+  createSlice,
+  SerializedError
+} from '@reduxjs/toolkit';
+
+import {
   TAuthResponse,
   TLoginData,
   TRegisterData,
@@ -7,13 +13,8 @@ import {
   registerUserApi,
   updateUserApi,
   TUserResponse
-} from '../utils/burger-api';
-import {
-  createAsyncThunk,
-  createSlice,
-  SerializedError
-} from '@reduxjs/toolkit';
-import { setCookie } from '../utils/cookie';
+} from '@api';
+import { setCookie } from '../../utils/cookie';
 
 export type TAuthorizationState = {
   isAuthChecked: boolean;

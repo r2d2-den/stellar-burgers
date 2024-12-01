@@ -4,11 +4,11 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import { ingredientsSlice } from '../components/ingredientsSlice';
-import { authorizationSlice } from '../components/authorizationSlice';
-import { orderSlice } from '../components/orderSlice';
-import { feedSlice } from '../components/feedSlice';
-import { constructorIngredients } from '../components/constructorSlice';
+import { ingredientsSlice } from './slices/ingredientsSlice';
+import { authorizationSlice } from './slices/authorizationSlice';
+import { orderSlice } from './slices/orderSlice';
+import { feedSlice } from './slices/feedSlice';
+import { constructorIngredients } from './slices/constructorSlice';
 
 export const rootReducer = combineReducers({
   [ingredientsSlice.name]: ingredientsSlice.reducer,

@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import {
   resetConstructorOrder,
   selectConstructorItems
-} from '../constructorSlice';
+} from '../../services/slices/constructorSlice';
 import {
   createOrder,
   resetOrderData,
   selectOrderModalData,
   selectOrderRequestStatus
-} from '../orderSlice';
-import { selectCurrentUser } from '../authorizationSlice';
+} from '../../services/slices/orderSlice';
+import { selectCurrentUser } from '../../services/slices/authorizationSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();

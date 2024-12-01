@@ -13,8 +13,9 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import '../../index.css';
 import styles from './app.module.css';
-import { useAppInitialization } from '../../hooks/useAppInitialization';
-import { ProtectedRoute } from '../protectedRoute';
+import { useAppInitialization } from '../../services/hooks/useAppInitialization';
+import { ProtectedRoute } from '../../services/protectedRoute/protectedRoute';
+
 const App = () => {
   const { backgroundLocation, onClose } = useModalRouting();
   useAppInitialization();

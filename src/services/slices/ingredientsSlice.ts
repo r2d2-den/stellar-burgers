@@ -1,11 +1,11 @@
-import { getIngredientsApi } from '../utils/burger-api';
+import { getIngredientsApi } from '@api';
 import {
   createAsyncThunk,
   createSlice,
   SerializedError
 } from '@reduxjs/toolkit';
-import { TIngredient } from '../utils/types';
-import { RootState } from 'src/services/store';
+import { TIngredient } from '@utils-types';
+import { RootState } from '../../services/store';
 
 export type TIngredientsState = {
   data: TIngredient[];
