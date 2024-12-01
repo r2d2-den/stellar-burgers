@@ -21,7 +21,6 @@ export const OrderInfo: FC = () => {
       dispatch(fetchOrderNumber(Number(number)));
     }
   }, [dispatch, number]);
-
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
@@ -58,7 +57,6 @@ export const OrderInfo: FC = () => {
       (acc, item) => acc + item.price * item.count,
       0
     );
-
     return {
       ...orderData,
       ingredientsInfo,
@@ -70,6 +68,5 @@ export const OrderInfo: FC = () => {
   if (!orderInfo) {
     return <Preloader />;
   }
-
   return <OrderInfoUI orderInfo={orderInfo} />;
 };

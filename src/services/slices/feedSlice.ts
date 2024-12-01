@@ -24,15 +24,25 @@ export const initialState: TFeedState = {
 };
 
 export const fetchAllFeeds = createAsyncThunk(
-  'order/getFeedsAll',
-  async () => await getFeedsApi()
+  'feed/fetchAllFeeds',
+  async () => {
+    try {
+      console.log('Запрос к API...');
+      const response = await getFeedsApi();
+      console.log('Данные получены:', response);
+      return response;
+    } catch (error) {
+      console.error('Ошибка при загрузке данных:', error);
+      throw error;
+    }
+  }
 );
 
 export const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchAllFeeds.pending, (state) => {
         state.loading = true;
@@ -51,6 +61,11 @@ export const feedSlice = createSlice({
 
 export const selectFeedOrders = (state: RootState) =>
   state.feed.feedData.orders;
-export const selectFeedData = (state: TFeedState) => state.feedData;
+
+export const selectFeedData = (state: RootState) => state.feed.feedData;
+
+export const selectFeedError = (state: RootState) => state.feed.error;
+
+export const selectFeedLoading = (state: RootState) => state.feed.loading;
 
 export default feedSlice.reducer;

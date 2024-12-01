@@ -23,14 +23,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (!isAuthChecked) {
     return <Preloader />;
   }
-
   if (onlyUnAuth && user) {
     return <Navigate replace to='/' />;
   }
-
   if (!onlyUnAuth && !user) {
     return <Navigate replace to='/login' state={{ from: location }} />;
   }
-
   return <>{children}</>;
 };

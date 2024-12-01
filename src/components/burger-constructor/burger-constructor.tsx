@@ -22,10 +22,8 @@ export const BurgerConstructor: FC = () => {
   const orderModalData = useSelector(selectOrderModalData);
   const orderRequest = useSelector(selectOrderRequestStatus);
   const user = useSelector(selectCurrentUser);
-
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-
     if (!user) {
       navigate('/login');
     } else {
@@ -51,7 +49,6 @@ export const BurgerConstructor: FC = () => {
     );
     return bunPrice + ingredientsPrice;
   }, [constructorItems]);
-
   return (
     <BurgerConstructorUI
       price={totalPrice}

@@ -9,13 +9,11 @@ import { selectIngredients } from '../../services/slices/ingredientsSlice';
 export const IngredientDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
   const ingredients: TIngredient[] = useSelector(selectIngredients);
-
   const ingredientData =
     ingredients.find((ingredient) => ingredient._id === id) || null;
 
   if (!ingredientData) {
     return <Preloader />;
   }
-
   return <IngredientDetailsUI ingredientData={ingredientData} />;
 };

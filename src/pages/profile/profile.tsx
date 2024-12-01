@@ -1,7 +1,6 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-
 import { Preloader } from '@ui';
 import {
   selectCurrentUser,
@@ -13,7 +12,6 @@ export const Profile: FC = () => {
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const userRequest = useSelector(selectUserRequestStatus);
-
   const [formValue, setFormValue] = useState({
     name: user ? user.name : '',
     email: user ? user.email : '',
@@ -32,7 +30,6 @@ export const Profile: FC = () => {
     formValue.name !== user?.name ||
     formValue.email !== user?.email ||
     !!formValue.password;
-
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(updateUserThunk(formValue));
@@ -42,7 +39,6 @@ export const Profile: FC = () => {
       password: ''
     });
   };
-
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
@@ -51,7 +47,6 @@ export const Profile: FC = () => {
       password: ''
     });
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValue((prevState) => ({
       ...prevState,
@@ -62,7 +57,6 @@ export const Profile: FC = () => {
   if (userRequest) {
     return <Preloader />;
   }
-
   return (
     <ProfileUI
       formValue={formValue}

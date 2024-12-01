@@ -98,10 +98,13 @@ export const orderSlice = createSlice({
 
 export const selectOrdersHistory = (state: RootState) =>
   state.order.ordersHistory;
+
 export const selectOrderRequestStatus = (state: RootState) =>
   state.order.orderRequest;
+
 export const selectOrderModalData = (state: RootState) =>
   state.order.successedOrder?.order;
+
 export const selectOrderNumber = (state: RootState) =>
   state.order.orderInfoData?.orders[0];
 

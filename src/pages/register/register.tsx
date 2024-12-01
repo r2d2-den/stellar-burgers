@@ -1,7 +1,6 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-
 import { Preloader } from '@ui';
 import {
   registrationUser,
@@ -16,7 +15,6 @@ export const Register: FC = () => {
   const dispatch = useDispatch();
   const registrationError = useSelector(selectUserError);
   const userRequest = useSelector(selectUserRequestStatus);
-
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(registrationUser({ email, name: userName, password }));
@@ -25,7 +23,6 @@ export const Register: FC = () => {
   if (userRequest) {
     return <Preloader />;
   }
-
   return (
     <RegisterUI
       errorText={registrationError?.message}

@@ -5,7 +5,6 @@ import { fetchIngredients } from '../slices/ingredientsSlice';
 import { AppDispatch } from '../store';
 
 const useAppDispatch = () => useReduxDispatch<AppDispatch>();
-
 export const useAppInitialization = () => {
   const dispatch = useAppDispatch();
 

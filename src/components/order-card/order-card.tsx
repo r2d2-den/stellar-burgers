@@ -7,13 +7,11 @@ import { useSelector } from '../../services/store';
 import { selectIngredients } from '../../services/slices/ingredientsSlice';
 
 const MAX_INGREDIENTS = 6;
-
 export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
   const ingredients: TIngredient[] = useSelector(selectIngredients);
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;
-
     const ingredientsMap = ingredients.reduce(
       (acc, item) => {
         acc[item._id] = item;
@@ -37,9 +35,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
       ingredientsInfo.length > MAX_INGREDIENTS
         ? ingredientsInfo.length - MAX_INGREDIENTS
         : 0;
-
     const date = new Date(order.createdAt);
-
     return {
       ...order,
       ingredientsInfo,
@@ -51,7 +47,6 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   }, [order, ingredients]);
 
   if (!orderInfo) return null;
-
   return (
     <OrderCardUI
       orderInfo={orderInfo}

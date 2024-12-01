@@ -15,7 +15,6 @@ export const IngredientsCategory = forwardRef<
   const burgerConstructor: TConstructorItems = useSelector(
     selectConstructorItems
   );
-
   const ingredientsCounters = useMemo(() => {
     const { bun, ingredients } = burgerConstructor;
     const counters: { [key: string]: number } = {};
@@ -26,7 +25,6 @@ export const IngredientsCategory = forwardRef<
     if (bun) counters[bun._id] = 2;
     return counters;
   }, [burgerConstructor]);
-
   return (
     <IngredientsCategoryUI
       title={title}

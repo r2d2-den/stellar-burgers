@@ -36,14 +36,12 @@ const handlePending = (state: TAuthorizationState) => {
   state.userRequest = true;
   state.userError = null;
 };
-
 const handleFulfilled = (state: TAuthorizationState, action: any) => {
   state.userData = action.payload;
   state.userRequest = false;
   state.isAuthChecked = true;
   state.isAuthenticated = true;
 };
-
 const handleRejected = (state: TAuthorizationState, action: any) => {
   state.userError = action.error;
   state.userRequest = false;
@@ -62,7 +60,6 @@ export const registrationUser = createAsyncThunk(
         message: 'Все поля должны быть заполнены'
       });
     }
-
     const dataResponse = await registerUserApi(data);
     if (!dataResponse?.success) return rejectWithValue(dataResponse);
 
@@ -84,7 +81,6 @@ export const loginUserThunk = createAsyncThunk(
         message: 'Пожалуйста, введите email и пароль'
       });
     }
-
     const dataResponse = await loginUserApi(data);
     if (!dataResponse?.success) return rejectWithValue(dataResponse);
 
@@ -150,7 +146,6 @@ export const authorizationSlice = createSlice({
 });
 
 export const { authChecked, logoutUser } = authorizationSlice.actions;
-
 export const selectIsAuthenticated = (state: {
   authorization: TAuthorizationState;
 }) => state.authorization.isAuthenticated;
