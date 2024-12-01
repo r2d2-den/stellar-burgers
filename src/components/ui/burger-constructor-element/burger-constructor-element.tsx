@@ -12,9 +12,12 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
       totalItems,
       handleMoveUp,
       handleMoveDown,
-      handleClose
+      handleDelete
     }) => (
-      <li className={`${styles.element} mb-4 mr-2`}>
+      <li
+        className={`${styles.element} mb-4 mr-2`}
+        data-cy={`cy-constructor-type-ingredients-${ingredient._id}`}
+      >
         <MoveButton
           handleMoveDown={handleMoveDown}
           handleMoveUp={handleMoveUp}
@@ -26,7 +29,7 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
             text={ingredient.name}
             price={ingredient.price}
             thumbnail={ingredient.image}
-            handleClose={handleClose}
+            handleClose={handleDelete}
           />
         </div>
       </li>

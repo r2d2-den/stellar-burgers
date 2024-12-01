@@ -1,24 +1,28 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { Preloader } from '@ui';
+import {
+  selectCurrentUser,
+  selectUserRequestStatus,
+  updateUserThunk
+} from '../../services/slices/authorizationSlice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
-
+  const user = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
+  const userRequest = useSelector(selectUserRequestStatus);
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user ? user.name : '',
+    email: user ? user.email : '',
     password: ''
   });
 
   useEffect(() => {
     setFormValue((prevState) => ({
       ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
+      name: user ? user.name : '',
+      email: user ? user.email : ''
     }));
   }, [user]);
 
@@ -26,20 +30,23 @@ export const Profile: FC = () => {
     formValue.name !== user?.name ||
     formValue.email !== user?.email ||
     !!formValue.password;
-
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-  };
-
-  const handleCancel = (e: SyntheticEvent) => {
-    e.preventDefault();
+    dispatch(updateUserThunk(formValue));
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user ? user.name : '',
+      email: user ? user.email : '',
       password: ''
     });
   };
-
+  const handleCancel = (e: SyntheticEvent) => {
+    e.preventDefault();
+    setFormValue({
+      name: user ? user.name : '',
+      email: user ? user.email : '',
+      password: ''
+    });
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValue((prevState) => ({
       ...prevState,
@@ -47,6 +54,9 @@ export const Profile: FC = () => {
     }));
   };
 
+  if (userRequest) {
+    return <Preloader />;
+  }
   return (
     <ProfileUI
       formValue={formValue}
@@ -56,6 +66,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };
