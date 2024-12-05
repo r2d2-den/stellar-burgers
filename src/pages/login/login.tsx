@@ -1,7 +1,7 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { Preloader } from '@ui';
 import {
   loginUserThunk,
@@ -9,21 +9,23 @@ import {
   selectUserError,
   selectUserRequestStatus
 } from '../../services/slices/authorizationSlice';
+import { useForm } from '../../services/hooks/useForm';
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange } = useForm({ email: '', password: '' });
+
   const dispatch = useDispatch();
   const loginUserError = useSelector(selectUserError);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userRequest = useSelector(selectUserRequestStatus);
+
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(loginUserThunk({ email, password }));
+    dispatch(loginUserThunk(values));
   };
 
   if (isAuthenticated) {
-    return <Navigate to={'/'} />;
+    return <Navigate to='/' />;
   }
   if (userRequest) {
     return <Preloader />;
@@ -31,10 +33,9 @@ export const Login: FC = () => {
   return (
     <LoginUI
       errorText={loginUserError?.message}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
+      email={values.email}
+      password={values.password}
+      handleChange={handleChange}
       handleSubmit={handleSubmit}
     />
   );

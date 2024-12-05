@@ -64,15 +64,20 @@ const App = () => {
   );
 };
 export default App;
+
 export const useModalRouting = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const backgroundLocation = location.state?.background;
+
+  const backgroundLocation = location.state?.background || null;
+
   const onClose = () => {
-    navigate(-1);
+    navigate(backgroundLocation || '/');
   };
+
   return { backgroundLocation, onClose };
 };
+
 const appRoutes = [
   { path: '/', element: <ConstructorPage /> },
   { path: '/feed', element: <Feed /> },

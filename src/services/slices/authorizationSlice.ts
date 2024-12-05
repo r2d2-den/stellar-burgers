@@ -14,7 +14,8 @@ import {
   updateUserApi,
   TUserResponse
 } from '@api';
-import { setCookie } from '../../utils/cookie';
+import { setCookie, getCookie } from '../../utils/cookie';
+import { useNavigate } from 'react-router-dom';
 
 export type TAuthorizationState = {
   isAuthChecked: boolean;
@@ -52,7 +53,6 @@ export const registrationUser = createAsyncThunk(
   'authorization/registrationUser',
   async (data: TRegisterData, { rejectWithValue }) => {
     const { email, password, name } = data;
-    console.log('Запрос на регистрацию с данными:', data);
 
     if (!email || !password || !name) {
       return rejectWithValue({
@@ -65,14 +65,13 @@ export const registrationUser = createAsyncThunk(
 
     setCookie('accessToken', dataResponse.accessToken);
     localStorage.setItem('refreshToken', dataResponse.refreshToken);
-    console.log(dataResponse);
     return dataResponse;
   }
 );
 
 export const loginUserThunk = createAsyncThunk(
   'authorization/loginUser',
-  async (data: TLoginData, { rejectWithValue }) => {
+  async (data: TLoginData, { rejectWithValue, dispatch }) => {
     const { email, password } = data;
 
     if (!email || !password) {
@@ -81,27 +80,42 @@ export const loginUserThunk = createAsyncThunk(
         message: 'Пожалуйста, введите email и пароль'
       });
     }
-    const dataResponse = await loginUserApi(data);
-    if (!dataResponse?.success) return rejectWithValue(dataResponse);
 
-    setCookie('accessToken', dataResponse.accessToken);
-    localStorage.setItem('refreshToken', dataResponse.refreshToken);
-    console.log(
-      'Токены установлены:',
-      dataResponse.accessToken,
-      dataResponse.refreshToken
-    );
+    try {
+      const dataResponse = await loginUserApi(data);
+      if (!dataResponse?.success) {
+        return rejectWithValue(dataResponse);
+      }
+
+      setCookie('accessToken', dataResponse.accessToken);
+      localStorage.setItem('refreshToken', dataResponse.refreshToken);
+
+      dispatch(getUserThunk());
+
+      return dataResponse;
+    } catch (error) {
+      return rejectWithValue({
+        success: false,
+        message: 'Произошла ошибка при входе. Попробуйте позже.'
+      });
+    }
   }
 );
 
 export const getUserThunk = createAsyncThunk(
   'authorization/getUser',
-  async () => await getUserApi()
+  async (_, { rejectWithValue }) => {
+    const accessToken = getCookie('accessToken');
+    if (!accessToken) {
+      return rejectWithValue({ success: false, message: 'Нет токена' });
+    }
+    return getUserApi();
+  }
 );
 
 export const updateUserThunk = createAsyncThunk(
   'authorization/updateUser',
-  async (data: TRegisterData) => await updateUserApi(data)
+  updateUserApi
 );
 
 export const authorizationSlice = createSlice({
@@ -113,32 +127,28 @@ export const authorizationSlice = createSlice({
     },
     logoutUser: (state) => {
       state.userData = null;
-      state.isAuthChecked = true;
+      state.isAuthChecked = false;
       state.isAuthenticated = false;
+      setCookie('accessToken', '', { expires: -1 });
+      localStorage.removeItem('refreshToken');
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(registrationUser.pending, handlePending)
       .addCase(registrationUser.fulfilled, handleFulfilled)
-      .addCase(registrationUser.rejected, handleRejected);
-
-    builder
+      .addCase(registrationUser.rejected, handleRejected)
       .addCase(loginUserThunk.pending, handlePending)
       .addCase(loginUserThunk.fulfilled, handleFulfilled)
-      .addCase(loginUserThunk.rejected, handleRejected);
-
-    builder
+      .addCase(loginUserThunk.rejected, handleRejected)
       .addCase(getUserThunk.pending, handlePending)
       .addCase(getUserThunk.fulfilled, (state, action) => {
-        state.isAuthChecked = true;
         state.userRequest = false;
         state.userData = action.payload;
         state.isAuthenticated = true;
+        state.isAuthChecked = true;
       })
-      .addCase(getUserThunk.rejected, handleRejected);
-
-    builder
+      .addCase(getUserThunk.rejected, handleRejected)
       .addCase(updateUserThunk.pending, handlePending)
       .addCase(updateUserThunk.fulfilled, handleFulfilled)
       .addCase(updateUserThunk.rejected, handleRejected);

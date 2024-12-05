@@ -25,17 +25,7 @@ export const initialState: TFeedState = {
 
 export const fetchAllFeeds = createAsyncThunk(
   'feed/fetchAllFeeds',
-  async () => {
-    try {
-      console.log('Запрос к API...');
-      const response = await getFeedsApi();
-      console.log('Данные получены:', response);
-      return response;
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-      throw error;
-    }
-  }
+  getFeedsApi
 );
 
 export const feedSlice = createSlice({

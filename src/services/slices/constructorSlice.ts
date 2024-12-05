@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TConstructorIngredient } from '@utils-types';
-
+import { v4 as uuidv4 } from 'uuid';
 export type TConstructorItems = {
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
@@ -40,19 +40,35 @@ export const constructorIngredients = createSlice({
   name: 'constructorIngredients',
   initialState,
   reducers: {
-    addIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
-      const ingredient = action.payload;
-      if (ingredient.type !== 'bun') {
-        state.constructorItems.ingredients.push(ingredient);
-      } else {
-        state.constructorItems.bun = ingredient;
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        const ingredient = action.payload;
+        if (ingredient.type !== 'bun') {
+          state.constructorItems.ingredients.push(ingredient);
+        } else {
+          state.constructorItems.bun = ingredient;
+        }
+      },
+      prepare: (ingredient: TConstructorIngredient) => {
+        const id = uuidv4();
+        return {
+          payload: {
+            ...ingredient,
+            id
+          }
+        };
       }
     },
-    removeIngredient: (state, action: PayloadAction<number>) => {
-      state.constructorItems.ingredients.splice(action.payload, 1);
+    removeIngredient: (state, action: PayloadAction<string>) => {
+      state.constructorItems.ingredients =
+        state.constructorItems.ingredients.filter(
+          (ingredient) => ingredient.id !== action.payload
+        );
     },
-    moveIngredientUp: (state, action: PayloadAction<number>) => {
-      const index = action.payload;
+    moveIngredientUp: (state, action: PayloadAction<string>) => {
+      const index = state.constructorItems.ingredients.findIndex(
+        (ingredient) => ingredient.id === action.payload
+      );
       if (index > 0) {
         state.constructorItems.ingredients = moveElementsInArray(
           state.constructorItems.ingredients,
@@ -61,8 +77,10 @@ export const constructorIngredients = createSlice({
         );
       }
     },
-    moveIngredientDown: (state, action: PayloadAction<number>) => {
-      const index = action.payload;
+    moveIngredientDown: (state, action: PayloadAction<string>) => {
+      const index = state.constructorItems.ingredients.findIndex(
+        (ingredient) => ingredient.id === action.payload
+      );
       if (index < state.constructorItems.ingredients.length - 1) {
         state.constructorItems.ingredients = moveElementsInArray(
           state.constructorItems.ingredients,

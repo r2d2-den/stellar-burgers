@@ -1,23 +1,34 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import { Preloader } from '@ui';
+
 import {
   registrationUser,
   selectUserError,
   selectUserRequestStatus
 } from '../../services/slices/authorizationSlice';
+import { useForm } from '../../services/hooks/useForm';
 
 export const Register: FC = () => {
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const { values, handleChange } = useForm({
+    email: '',
+    password: '',
+    userName: ''
+  });
   const registrationError = useSelector(selectUserError);
   const userRequest = useSelector(selectUserRequestStatus);
+
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(registrationUser({ email, name: userName, password }));
+    dispatch(
+      registrationUser({
+        email: values.email,
+        name: values.userName,
+        password: values.password
+      })
+    );
   };
 
   if (userRequest) {
@@ -26,12 +37,10 @@ export const Register: FC = () => {
   return (
     <RegisterUI
       errorText={registrationError?.message}
-      email={email}
-      userName={userName}
-      password={password}
-      setEmail={setEmail}
-      setPassword={setPassword}
-      setUserName={setUserName}
+      email={values.email}
+      password={values.password}
+      userName={values.userName}
+      handleChange={handleChange}
       handleSubmit={handleSubmit}
     />
   );

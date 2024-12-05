@@ -1,20 +1,33 @@
 import { useEffect } from 'react';
-import { useDispatch as useReduxDispatch } from 'react-redux';
 import { authChecked, getUserThunk } from '../slices/authorizationSlice';
 import { fetchIngredients } from '../slices/ingredientsSlice';
-import { AppDispatch } from '../store';
+import { useDispatch, useSelector } from '../store';
+import {
+  selectIsAuthenticated,
+  selectIsAuthChecked
+} from '../slices/authorizationSlice';
 
-const useAppDispatch = () => useReduxDispatch<AppDispatch>();
 export const useAppInitialization = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isAuthChecked = useSelector(selectIsAuthChecked);
 
   useEffect(() => {
     const token = localStorage.getItem('refreshToken');
-    if (token) {
-      dispatch(getUserThunk());
-    } else {
-      dispatch(authChecked());
+
+    if (!isAuthChecked) {
+      if (token) {
+        dispatch(getUserThunk());
+      } else {
+        dispatch(authChecked());
+      }
     }
+
     dispatch(fetchIngredients());
-  }, [dispatch]);
+  }, [dispatch, isAuthChecked]);
+
+  useEffect(() => {
+    if (isAuthChecked && !isAuthenticated) {
+    }
+  }, [isAuthChecked, isAuthenticated]);
 };

@@ -4,15 +4,17 @@ import { ProfileMenuUI } from '@ui';
 import { deleteCookie } from '../../utils/cookie';
 import { useDispatch } from '../../services/store';
 import { logoutUser } from '../../services/slices/authorizationSlice';
+
 export const ProfileMenu: FC = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem('refreshToken');
     deleteCookie('accessToken');
     dispatch(logoutUser());
     navigate('/');
   };
+
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;
 };

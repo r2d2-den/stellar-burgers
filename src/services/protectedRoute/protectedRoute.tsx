@@ -1,11 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import {
   selectCurrentUser,
   selectIsAuthChecked
 } from '../slices/authorizationSlice';
 import { Preloader } from '../../components/ui/preloader';
+import { useSelector } from '../store';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -23,11 +22,10 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (!isAuthChecked) {
     return <Preloader />;
   }
-  if (onlyUnAuth && user) {
-    return <Navigate replace to='/' />;
-  }
+
   if (!onlyUnAuth && !user) {
     return <Navigate replace to='/login' state={{ from: location }} />;
   }
+
   return <>{children}</>;
 };

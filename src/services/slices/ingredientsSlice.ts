@@ -19,19 +19,10 @@ export const initialState: TIngredientsState = {
   error: null
 };
 
-export const fetchIngredients = createAsyncThunk<
-  TIngredient[],
-  void,
-  { rejectValue: string }
->('ingredients/getAll', async (_, { rejectWithValue }) => {
-  try {
-    return await getIngredientsApi();
-  } catch (err) {
-    return rejectWithValue(
-      err instanceof Error ? err.message : 'Unknown error'
-    );
-  }
-});
+export const fetchIngredients = createAsyncThunk<TIngredient[]>(
+  'ingredients/getAll',
+  getIngredientsApi
+);
 
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
@@ -49,9 +40,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload
-          ? { name: 'Error', message: action.payload }
-          : action.error;
+        state.error = action.error;
       });
   }
 });

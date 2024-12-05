@@ -32,17 +32,17 @@ export const initialState: TOrderState = {
 
 export const fetchOrders = createAsyncThunk<TOrder[]>(
   'order/getOrders',
-  async () => await getOrdersApi()
+  getOrdersApi
 );
 
 export const createOrder = createAsyncThunk<TNewOrderResponse, string[]>(
   'order/postOrder',
-  async (data) => await orderBurgerApi(data)
+  orderBurgerApi
 );
 
 export const fetchOrderNumber = createAsyncThunk<TOrderResponse, number>(
   'order/getOrderByNumber',
-  async (number: number) => await getOrderByNumberApi(number)
+  getOrderByNumberApi
 );
 
 export const orderSlice = createSlice({
