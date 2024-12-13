@@ -13,7 +13,7 @@ import {
   registerUserApi,
   updateUserApi,
   TUserResponse
-} from '@api';
+} from '../../utils/burger-api';
 import { setCookie, getCookie } from '../../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,12 +37,14 @@ const handlePending = (state: TAuthorizationState) => {
   state.userRequest = true;
   state.userError = null;
 };
+
 const handleFulfilled = (state: TAuthorizationState, action: any) => {
   state.userData = action.payload;
   state.userRequest = false;
   state.isAuthChecked = true;
   state.isAuthenticated = true;
 };
+
 const handleRejected = (state: TAuthorizationState, action: any) => {
   state.userError = action.error;
   state.userRequest = false;
@@ -106,16 +108,21 @@ export const getUserThunk = createAsyncThunk(
   'authorization/getUser',
   async (_, { rejectWithValue }) => {
     const accessToken = getCookie('accessToken');
+
     if (!accessToken) {
       return rejectWithValue({ success: false, message: 'Нет токена' });
     }
-    return getUserApi();
+    const response = await getUserApi();
+    return response;
   }
 );
 
 export const updateUserThunk = createAsyncThunk(
   'authorization/updateUser',
-  updateUserApi
+  async (data: any, { rejectWithValue }) => {
+    const response = await updateUserApi(data);
+    return response;
+  }
 );
 
 export const authorizationSlice = createSlice({

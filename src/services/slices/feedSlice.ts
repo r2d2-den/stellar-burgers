@@ -4,7 +4,7 @@ import {
   createSlice,
   SerializedError
 } from '@reduxjs/toolkit';
-import { getFeedsApi, TFeedsResponse } from '@api';
+import { getFeedsApi, TFeedsResponse } from '../../utils/burger-api';
 
 type TFeedState = {
   feedData: TFeedsResponse;

@@ -3,7 +3,7 @@ import {
   createSlice,
   SerializedError
 } from '@reduxjs/toolkit';
-import { TOrder } from '@utils-types';
+import { TOrder } from '../../utils/burger-api';
 
 import {
   getOrderByNumberApi,
@@ -11,7 +11,7 @@ import {
   orderBurgerApi,
   TNewOrderResponse,
   TOrderResponse
-} from '@api';
+} from '../../utils/burger-api';
 import { RootState } from '../store';
 
 export type TOrderState = {
