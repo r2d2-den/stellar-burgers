@@ -16,13 +16,14 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
     }) => (
       <li
         className={`${styles.element} mb-4 mr-2`}
-        data-cy={`cy-constructor-type-ingredients-${ingredient._id}`}
+        data-cy={`ingredient-item-${ingredient._id}`}
       >
         <MoveButton
           handleMoveDown={handleMoveDown}
           handleMoveUp={handleMoveUp}
           isUpDisabled={index === 0}
           isDownDisabled={index === totalItems - 1}
+          data-cy={`move-button-${ingredient._id}`}
         />
         <div className={`${styles.element_fullwidth} ml-2`}>
           <ConstructorElement
@@ -30,6 +31,7 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
             price={ingredient.price}
             thumbnail={ingredient.image}
             handleClose={handleDelete}
+            data-cy={`ingredient-close-${ingredient._id}`}
           />
         </div>
       </li>

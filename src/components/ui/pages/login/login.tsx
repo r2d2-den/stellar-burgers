@@ -22,6 +22,7 @@ export const LoginUI: FC<LoginUIProps> = ({
         className={`pb-15 ${styles.form}`}
         name='login'
         onSubmit={handleSubmit}
+        data-cy='login-form'
       >
         <>
           <div className='pb-6'>
@@ -34,6 +35,7 @@ export const LoginUI: FC<LoginUIProps> = ({
               error={false}
               errorText=''
               size='default'
+              data-cy='login-email'
             />
           </div>
           <div className='pb-6'>
@@ -41,10 +43,16 @@ export const LoginUI: FC<LoginUIProps> = ({
               onChange={handleChange}
               value={password}
               name='password'
+              data-cy='login-password'
             />
           </div>
           <div className={`pb-6 ${styles.button}`}>
-            <Button type='primary' size='medium' htmlType='submit'>
+            <Button
+              type='primary'
+              size='medium'
+              htmlType='submit'
+              data-cy='login-submit'
+            >
               Войти
             </Button>
           </div>
@@ -57,13 +65,21 @@ export const LoginUI: FC<LoginUIProps> = ({
       </form>
       <div className={`pb-4 ${styles.question} text text_type_main-default`}>
         Вы - новый пользователь?
-        <Link to='/register' className={`pl-2 ${styles.link}`}>
+        <Link
+          to='/register'
+          className={`pl-2 ${styles.link}`}
+          data-cy='link-register'
+        >
           Зарегистрироваться
         </Link>
       </div>
       <div className={`${styles.question} text text_type_main-default pb-6`}>
         Забыли пароль?
-        <Link to={'/forgot-password'} className={`pl-2 ${styles.link}`}>
+        <Link
+          to={'/forgot-password'}
+          className={`pl-2 ${styles.link}`}
+          data-cy='link-forgot-password'
+        >
           Восстановить пароль
         </Link>
       </div>
