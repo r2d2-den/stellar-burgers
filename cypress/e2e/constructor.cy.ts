@@ -1,6 +1,7 @@
+import '../support/commands';
+
 describe('Тест конструктора бургера', function () {
-  // ID ингредиентов
-  const ingredients = [
+  const INGREDIENT_IDS = [
     'cy-643d69a5c3f7b9001cfa093e',
     'cy-643d69a5c3f7b9001cfa0946',
     'cy-643d69a5c3f7b9001cfa0942',
@@ -8,7 +9,6 @@ describe('Тест конструктора бургера', function () {
   ];
 
   beforeEach(() => {
-    // Перехватываем запросы
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' }).as(
       'getIngredients'
     );
@@ -17,77 +17,52 @@ describe('Тест конструктора бургера', function () {
       'postOrder'
     );
 
-    // Устанавливаем токены для авторизации
     window.localStorage.setItem(
       'refreshToken',
       JSON.stringify('tesrtaccessToken')
     );
     cy.setCookie('accessToken', 'test-accessToken');
 
-    // Переход на главную
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.wait('@getIngredients');
   });
 
-  // Очищаем хранилище и куки
   afterEach(() => {
     cy.clearLocalStorage();
     cy.clearCookies();
   });
 
-  // Функция для добавления ингредиента
-  const addIngredient = (ingredientId: string) => {
-    cy.get(`[data-cy=${ingredientId}] button`).contains('Добавить').click();
-  };
-
-  // Проверка что BurgerConstructor отображается на странице
   it('должен отображать компонент BurgerConstructor', () => {
     cy.get('h1').contains('Соберите бургер');
   });
 
   it('должен добавить ингредиент в конструктор', () => {
-    addIngredient('cy-643d69a5c3f7b9001cfa093e');
+    cy.addIngredient(INGREDIENT_IDS[0]);
     cy.get('[data-cy="cy-ingredients-list"]')
       .children()
       .should('have.length', 1);
   });
 
-  it('должен открыть модальное окно ингредиента', () => {
-    cy.get('[data-cy="cy-643d69a5c3f7b9001cfa093e"] a').click();
-    cy.get('[data-cy="cy-modal"]').should('be.visible');
+  it('должен открыть и закрыть модальное окно ингредиента', () => {
+    cy.openIngredientModal(INGREDIENT_IDS[0]);
     cy.get('[data-cy="cy-ingredient-details-header"]').contains(
       'Филе Люминесцентного тетраодонтимформа'
     );
-  });
-
-  it('должен закрыть модальное окно по клику на крестик', () => {
-    cy.get('[data-cy="cy-643d69a5c3f7b9001cfa093e"] a').click();
-    cy.get('[data-cy="cy-close-modal"]').click();
-    cy.get('[data-cy="cy-modal"]').should('not.exist');
+    cy.closeModal();
   });
 
   it('должен закрыть модальное окно по клику на оверлей', () => {
-    cy.get('[data-cy="cy-643d69a5c3f7b9001cfa093e"] a').click();
-    cy.get('[data-cy="cy-modal-overlay"]').click('topRight', { force: true });
-    cy.get('[data-cy="cy-modal"]').should('not.exist');
+    cy.openIngredientModal(INGREDIENT_IDS[0]);
+    cy.closeModalByOverlay();
   });
 
-  it('Оформление заказа и проверка конструктора', () => {
-    ingredients.forEach(addIngredient);
-
-    cy.get('[data-cy=cy-order-info] button')
-      .contains('Оформить заказ')
-      .scrollIntoView()
-      .click();
-    cy.wait('@postOrder');
-
-    cy.get('[data-cy="cy-modal"]').should('be.visible');
-    cy.get('[data-cy=cy-order-number]').contains('38217');
-    cy.get('[data-cy="cy-close-modal"]').click();
-    cy.get('[data-cy="cy-modal"]').should('not.exist');
+  it('оформление заказа', () => {
+    cy.placeOrder(INGREDIENT_IDS);
+    cy.get('[data-cy="cy-order-number"]').contains('38217');
+    cy.closeModal();
   });
 
-  it('Должен отображать пустой конструктор', () => {
+  it('должен отображать пустой конструктор', () => {
     cy.get('[data-cy="burger-constructor"]').should('exist').and('be.visible');
     cy.get('[data-cy="cy-bun-top"]').children().should('have.length', 0);
     cy.get('[data-cy="cy-bun-bottom"]').children().should('have.length', 0);
